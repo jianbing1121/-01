@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="./css/index.css">
+</head>
+<script src="./vue.js"></script>
+<style>
+	/* 添加固定定位 */
+	.play {
+		position: fixed;
+		bottom: 0px;
+		border-top: 0.5px solid black;
+		background-color: white;
+		width: 100%;
+		height: 60px;
+		/* 弹性布局 */
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.play .pic {
+		width: 40px;
+		height: 40px;
+		margin-left: 15px;
+		border-radius: 50%;
+
+		animation: roll 5s linear infinite;
+		animation-play-state: paused running;
+	}
+
+	.play .con {
+		flex: 1;
+	}
+
+	.play .con h6 {
+		font-size: 14px;
+	}
+
+	.play .con p span {
+		font-size: 12px;
+		color: #777;
+	}
+
+	.play .right {
+		width: 80px;
+		margin-right: 10px;
+		display: flex;
+		justify-content: space-between;
+	}
+
+	/* 播放列表 */
+	.play .song-list {
+		width: 100%;
+		height: 35vh;
+		background-color: rgb(0, 0, 0, 0.678);
+		text-align: center;
+		color: #fff;
+		position: fixed;
+		bottom: 0px;
+	}
+
+	.play .song-list h3 {
+		font-size: 16px;
+		line-height: 40px;
+	}
+
+	.play .song-list .song-ul {
+		height: 20vh;
+		overflow-y: auto;
+		margin-top: 20px;
+	}
+
+	.play .song-list .song-ul li {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		line-height: 24px;
+	}
+
+	.play .song-list .song-ul li .gscol {
+		color: rgb(45, 228, 28);
+	}
+
+	.play .song-list .song-ul li .delpic {
+		width: 20px;
+		height: 20px;
+		margin-right: 20px;
+	}
+
+	/*  @keyframes 自定义名字
+		rotate(度数)*/
+	@keyframes roll {
+		from {
+			transform: rotate(0deg);
+		}
+
+		to {
+			transform: rotate(360deg);
+
+		}
+	}
+</style>
+
+<body>
+	<div id="app">
+		<!-- 自定义传送给子类 -->
+		<tab-nav v-bind:linum="linum" v-on:tabgo="tabgo"></tab-nav>
+		<div v-if="linum == 1">
+			<recommended></recommended>
+			<music-list v-bind:musiclist="musiclist" @play="play"></music-list>
+		</div>
+		<div v-if="linum == 2">
+			<hot-song v-bind:musiclist="musiclist" v-bind:time="time" @play="play"></hot-song>
+		</div>
+		<!-- 播放插件 -->
+		<audio src="../music/消愁.mp3" @play="Playstate" @pause="Pausestate" ref="player" autoplay></audio>
+
+
+		<!-- 这里做一个全局的播放器 -->
+		<div class="play" v-if="newMusic">
+
+			<img class="pic" :style="{animationPlayState: show ? 'running' : 'paused'}" :src="newMusic.picUrl">
+
+			<div class="con">
+				<h6>{{newMusic.name}}</h6>
+				<p>
+					<span v-for="artist in newMusic.artists">{{artist.name}}</span>
+				</p>
+			</div>
+			<div class="right">
+				<img v-if="show" @click.stop="btnp(1)" src="../image/icon/gPlay.png">
+				<img v-else @click.stop="btnp(2)" src="../image/icon/gPause.png">
+				<img @click.stop="songbtn = true" src="../image/icon/gSongList.png">
+
+			</div>
+
+
+			<!-- 播放列表 -->
+			<div class="song-list" v-if="songbtn">
+				<h3>播放列表</h3>
+				<ul class="song-ul">
+					<li v-for="(song,index) in songs" @click.stop="play(song)">
+						<span style="width: 40px;"></span>
+						<span :class="{gscol:newMusic.id == song.id}">{{index + 1}}- &nbsp;{{song.name}}</span>
+						<img class="delpic" src="../image/icon/删除.png" @click.stop="delbtn(index)">
+					</li>
+				</ul>
+				<!-- 点击事件，点击关闭 -->
+				<h3 @click.stop="songbtn = false"> 关闭</h3>
+			</div>
+
+
+		</div>
+
+
+	</div>
+
+
+
+	<script src="./js/hot-song.js"></script>
+	<script src="./js/tab-nav.js"></script>
+	<script src="./js/recommended.js"></script>
+	<script src="./js/music-list.js"></script>
+
+	<script>
+		new Vue({
+			el: "#app",
+			data: {
+				linum: 1,
+				show: false,
+				url: null,
+				songbtn: false,//播放列表按钮
+				songs: [],
+				newMusic: null,
+				musiclist: [
+					{
+						"id": 1954974529,
+						"name": "消愁",
+						"maxbr": 999000,
+						"picUrl": "../image/imgs/1.jpg",
+						"play": "./music/消愁.mp3",
+						"artists": [
+							{
+								"name": "毛不易",
+								"id": 9548,
+							}
+						],
+					},
+
+					{
+						"id": 1954420092,
+						"name": "新赛马",
+						"maxbr": 320000,
+						"picUrl": "../image/imgs/2.jpg",
+						"play": "./music/新赛马.mp3",
+						"artists": [
+							{
+								"name": "陈耀星",
+								"id": 57811,
+							},
+							{
+								"name": "陈军",
+								"id": 10561,
+							},
+							{
+								"name": "陈依妙",
+								"id": 23103,
+							}
+						],
+					},
+					{
+						"id": 1954420012,
+						"name": "像我这样的人",
+						"maxbr": 999000,
+						"picUrl": "../image/imgs/3.jpg",
+						"play": "./music/像我这样的人.mp3",
+						"artists": [
+							{
+								"name": "毛不易",
+								"id": 5781,
+							}
+						],
+					},
+					{
+						"id": 1954983178,
+						"name": "牵系",
+						"maxbr": 999000,
+						"picUrl": "../image/imgs/1.jpg",
+						"play": "./music/像我这样的人.mp3",
+						"artists": [
+							{
+								"name": "张信哲",
+								"id": 6454,
+							}
+						],
+					},
+					{
+						"id": 1954696277,
+						"name": "形容词",
+						"maxbr": 999000,
+						"picUrl": "../image/imgs/1.jpg",
+						"play": "./music/像我这样的人.mp3",
+						"artists": [
+							{
+								"name": "艾热 AIR",
+								"id": 1203045,
+							}
+						],
+					},
+					{
+						"id": 1954942773,
+						"name": "灰尘 (Live)",
+						"maxbr": 999000,
+						"picUrl": "../image/imgs/1.jpg",
+						"play": "./music/像我这样的人.mp3",
+						"artists": [
+							{
+								"name": "赵磊",
+								"id": 12787662,
+							}
+						],
+					},
+					{
+						"id": 1955462665,
+						"name": "傻女",
+						"maxbr": 320000,
+						"picUrl": "../image/imgs/1.jpg",
+						"play": "./music/像我这样的人.mp3",
+						"artists": [
+							{
+								"name": "苏妙玲",
+								"id": 9424,
+							}
+						],
+					},
+
+					{
+						"id": 1953856917,
+						"name": "前任 请坐",
+						"maxbr": 320000,
+						"picUrl": "../image/imgs/1.jpg",
+						"play": "./music/像我这样的人.mp3",
+						"artists": [
+							{
+								"name": "王金金",
+								"id": 12258611,
+							}
+						],
+					},
+					{
+						"id": 1952528063,
+						"name": "Glimpse of Us",
+						"maxbr": 999000,
+						"picUrl": "../image/imgs/1.jpg",
+						"play": "./music/像我这样的人.mp3",
+						"artists": [
+							{
+								"name": "Joji",
+								"id": 12203295,
+							}
+						],
+					},
+					{
+						"id": 146307690,
+						"name": "So Good",
+						"maxbr": 320000,
+						"picUrl": "../image/imgs/1.jpg",
+						"play": "./music/像我这样的人.mp3",
+						"artists": [
+							{
+								"name": "Halsey",
+								"id": 964321,
+							}
+						],
+					},
+
+
+				]
+
+			},
+			methods: {
+				tabgo(event) {
+					console.log("跳转成功");
+					this.linum = event;
+				},
+				play(event) {
+					this.show = true;
+					this.newMusic = event;
+					this.url = event.play;
+					this.show = !this.show;
+					// 调用添加歌曲
+					this.addSong(event)
+					// 获取dom元素
+					console.log(event);
+					// 为真的时候播放，反之暂停
+					var player = this.$refs.player;
+
+					if (this.show) {
+						player.play();
+					} else {
+						player.pause();
+					}
+				},
+
+				Playstate() {
+					this.show = true;
+				},
+				Pausestate() {
+					this.show = false;
+				},
+				btnp(num) {
+					var player = this.$refs.player;
+					if (num == 2) {
+						player.play();
+					} else {
+						player.pause();
+					}
+				},
+				// 封装添加歌曲函数
+				addSong(item) {
+					// 在数组的末尾加上一条数据
+					this.songs.push(item);
+					// 调用去重函数
+					this.qc(this.songs)
+				},
+				// 去重函数
+				qc(array) {
+					for (let i = 0; i < array.length - 1; i++) {
+
+						for (let j = i + 1; j < array.length; j++) {
+							if (array[i] == array[j]) {
+								array.splice(j, 1);//从下标j开始删除
+								j--;
+							}
+
+						}
+
+					}
+					return array;
+				},
+				// 删除按钮
+				delbtn(index) {
+					this.songs.splice(index, 1);
+				},
+			},
+
+			computed: {
+				// 新建一个计算属性
+				time() {
+					// 设置时间
+					var day = new Date();
+					var m = day.getMonth() + 1;
+					var d = day.getDate();
+					return `${m < 10 ? '0' + m : m}月 ${d}日`;
+				}
+
+			}
+
+		})
+	</script>
+</body>
+
+</html>

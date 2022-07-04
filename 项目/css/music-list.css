@@ -1,0 +1,51 @@
+.music-list .music-ul li {
+    /* 使用弹性布局 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* 内边距 */
+    padding: 0 10px;
+}
+
+.music-list .music-ul li .left h5 {
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.music-list .music-ul li .left span {
+    font-size: 12px;
+    color: #888;
+}
+
+.music-list .music-ul li .left i {
+    display: inline-block;
+    width: 12px;
+    height: 8px;
+    background-image: url("../../image/icon/index_icon_2x.png");
+    background-size: 165px 88px;
+}
+.music-list .music-ul li .right button{
+    width: 35px;
+    height: 30px;
+    /* 使用雪碧图设置背景图片 */
+    background-image: url("../../image/icon/index_icon_2x.png");
+    /* 移动精灵图 */
+    background-position: -27px 0;
+    background-size: 200px;
+    
+}
+.music-list .music-ul li .left .num{
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    margin-left: -10px;
+}
+      
+.music-list .music-ul li .left{
+  /* 弹性布局  flex:1 表示填满剩下的空间*/
+    flex: 1;
+}
+.music-list .music-ul li .col{
+    color: rgb(0, 255, 85);
+}

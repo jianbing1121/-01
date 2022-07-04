@@ -1,0 +1,58 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+ul,ol{
+    list-style: none;
+}
+h4 {
+    padding-left: 10px;
+    border-left: 2px solid red;
+    font-weight: 400;
+    font-size: 16px;
+    margin: 15px 0;
+}
+.recommended .rlist{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.recommended .rlist li{
+    width: 33%;
+    /* 添加绝对定位 */
+   position: relative;
+}
+img{
+    width: 100%;
+    height: auto;
+}
+h6{
+    font-weight: 400;
+    padding: 3px 2px 0 6px;
+    text-overflow: ellipsis;
+    /* 超出部分用省略号 */
+    word-break: break-all;
+    /* break-all（允许在单词间换行） */
+    display: -webkit-box;
+    /* 对象作为伸缩盒子模型显示 */
+    -webkit-box-orient: vertical;
+    /* 设置或检索伸缩盒对象的子元素的排列方式 */
+    -webkit-line-clamp: 2; 
+    /* 显示的行数 */
+}
+.recommended .rlist li .count{
+    top: 0;
+    right: 5px;
+    position: absolute;
+
+}
+.recommended .rlist li .count img{
+    width: 13px;
+    height: 13px;
+}
+.recommended .rlist li .count span{
+    color: white;
+    font-size: 12px;
+}

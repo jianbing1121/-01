@@ -1,0 +1,14 @@
+@import "./tab-nav.css";
+@import "./reommended.css";
+@import "./music-list.css";
+@import "./hot-song.css";
+
+button{
+    border: none;
+    background: none;
+}
+audio {
+    width: 100%;
+        position: fixed;
+        bottom: 60px;
+}
